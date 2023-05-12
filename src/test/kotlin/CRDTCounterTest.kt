@@ -4,7 +4,8 @@ import kotlin.test.assertEquals
 class CRDTCounterTest{
     @Test
     fun additionSubtractionIsCorrect1(){
-        val counter = CRDTCounter();
+
+        val counter = CRDTCounter(BetweenThreadMessaging())
         for(i in 0..9){
             if(i % 2 == 0){
                 counter.inc()
@@ -17,7 +18,7 @@ class CRDTCounterTest{
     }
     @Test
     fun additionSubtractionIsCorrect2(){
-        val counter = CRDTCounter();
+        val counter = CRDTCounter(BetweenThreadMessaging())
         for(i in 1..100)
             counter.inc()
         for(i in 1..50)
