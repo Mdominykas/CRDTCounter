@@ -1,0 +1,1 @@
+data class AskForCounterValues(val sender: Int) : Message
