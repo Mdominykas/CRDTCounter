@@ -16,7 +16,7 @@ class CRDTCounter(private val messaging: Messaging) {
         while (msg != null) {
             when (msg) {
                 is UpdatedValueMessage -> updateValue(msg)
-                is AskingValueMessage -> sendValue(msg)
+                is AskingValueMessage -> sendOwnValue(msg)
                 else -> {
                     assert(false)
                 }
@@ -49,6 +49,7 @@ class CRDTCounter(private val messaging: Messaging) {
     private fun updateValue(message: UpdatedValueMessage) {
         countersStates.compute(message.senderId) { _, oldValue ->
             if (oldValue != null) {
+//                here maximum is taken, because there is possibility that messages arrive out of order
                 Pair(
                     maxOf(message.newAdditionValue, oldValue.first),
                     maxOf(message.newSubtractionValue, oldValue.second)
@@ -58,7 +59,11 @@ class CRDTCounter(private val messaging: Messaging) {
             }
         }
     }
-    private fun sendValue(message: AskingValueMessage){
+
+    /*
+    When other counter asks for this one's value, it responds with UpdatedValueMessage
+     */
+    private fun sendOwnValue(message: AskingValueMessage) {
         messaging.sendMessage(message.sender, UpdatedValueMessage(id, addition, subtraction))
     }
 }

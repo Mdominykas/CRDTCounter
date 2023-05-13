@@ -3,7 +3,7 @@ import kotlin.test.assertEquals
 
 class SingleThreadedTests {
     @Test
-    fun twoCountersAdditionCorrect(){
+    fun twoCountersAdditionCorrect() {
         val messaging = BetweenThreadMessaging()
         val counter1 = CRDTCounter(messaging)
         val counter2 = CRDTCounter(messaging)
@@ -12,8 +12,9 @@ class SingleThreadedTests {
         assertEquals(counter1.get(), 2)
         assertEquals(counter2.get(), 2)
     }
+
     @Test
-    fun twoCountersAdditionAndSubtraction(){
+    fun twoCountersAdditionAndSubtraction() {
         val messaging = BetweenThreadMessaging()
         val counter1 = CRDTCounter(messaging)
         val counter2 = CRDTCounter(messaging)
@@ -26,8 +27,12 @@ class SingleThreadedTests {
         assertEquals(counter2.get(), 1)
     }
 
+    /*
+    Test this scenario: some operations were performed. After that a new counter was initialized. Both counters should
+    continue to work correctly.
+     */
     @Test
-    fun laterInitializedCounter(){
+    fun testLaterInitializedCounterIsCorrect() {
         val messaging = BetweenThreadMessaging()
         val counter1 = CRDTCounter(messaging)
         counter1.inc()
