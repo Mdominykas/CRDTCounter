@@ -6,12 +6,17 @@ class CRDTCounter(private val messaging: Messaging) {
     private var subtraction: Int = 0
     private val countersStates: MutableMap<Int, Pair<Int, Int>> = HashMap()
 
+    init {
+        messaging.sendMessageToAll(id, AskingValueMessage(id))
+        receiveAllMessages()
+    }
+
     private fun receiveAllMessages() {
         var msg = messaging.receiveMessage(id)
         while (msg != null) {
             when (msg) {
                 is UpdatedValueMessage -> updateValue(msg)
-                is AskForCounterValues -> sendValue(msg)
+                is AskingValueMessage -> sendValue(msg)
                 else -> {
                     assert(false)
                 }
@@ -53,7 +58,7 @@ class CRDTCounter(private val messaging: Messaging) {
             }
         }
     }
-    private fun sendValue(message: AskForCounterValues){
+    private fun sendValue(message: AskingValueMessage){
         messaging.sendMessage(message.sender, UpdatedValueMessage(id, addition, subtraction))
     }
 }

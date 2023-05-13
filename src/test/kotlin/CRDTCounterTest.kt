@@ -26,4 +26,11 @@ class CRDTCounterTest{
         assertEquals(counter.get(), 50)
     }
 
+    @Test
+    fun initialValueIsZero() {
+        val messaging = BetweenThreadMessaging()
+        val counter = CRDTCounter(messaging)
+
+        assertEquals(counter.get(), 0)
+    }
 }
